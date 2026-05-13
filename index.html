@@ -40,6 +40,10 @@
     <!-- Auth Overlay -->
     <div id="auth-overlay" class="fixed inset-0 bg-[#09090b] z-50 flex flex-col items-center justify-center text-center px-4">
         <div class="max-w-md w-full glass p-8 rounded-3xl shadow-2xl border-t-4 border-t-yellow-400">
+            
+            <!-- Maskot Dorobo Login -->
+            <img src="download.jpg" alt="Dorobo Mascot" class="w-32 h-32 mx-auto mb-4 rounded-full object-cover border-4 border-[#09090b] outline outline-4 outline-yellow-400 shadow-[0_0_20px_rgba(250,204,21,0.4)]">
+            
             <h1 class="text-4xl font-black text-yellow-400 mb-2 tracking-wide">DOROBO</h1>
             <p id="t-subtitle" class="text-zinc-400 mb-8">Kendalikan keuanganmu. Jangan biarkan uangmu dicuri kebiasaan buruk.</p>
             <button id="btn-login" class="flex items-center justify-center w-full bg-yellow-400 text-black py-3 rounded-xl font-bold hover:bg-yellow-500 transition shadow-[0_0_15px_rgba(250,204,21,0.3)]">
@@ -51,12 +55,16 @@
 
     <!-- Main Content -->
     <div id="app-content" class="hidden max-w-6xl mx-auto pt-10 md:pt-4">
-        <header class="flex justify-between items-center mb-8 border-b border-zinc-800 pb-4">
-            <div>
-                <h1 class="text-3xl font-black text-yellow-400 tracking-wider mb-1">DOROBO</h1>
-                <h2 class="text-lg text-zinc-300"><span id="t-hello">Halo,</span> <span id="user-name" class="font-bold text-white">Pengguna</span></h2>
+        <header class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 border-b border-zinc-800 pb-4 gap-4">
+            <div class="flex items-center gap-4">
+                <!-- Maskot Mini di Header -->
+                <img src="download.jpg" alt="Dorobo Mascot Mini" class="w-14 h-14 rounded-full border-2 border-yellow-400 object-cover shadow-[0_0_10px_rgba(250,204,21,0.2)]">
+                <div>
+                    <h1 class="text-3xl font-black text-yellow-400 tracking-wider mb-0 leading-none">DOROBO</h1>
+                    <h2 class="text-sm text-zinc-400 mt-1"><span id="t-hello">Halo,</span> <span id="user-name" class="font-bold text-white">Pengguna</span></h2>
+                </div>
             </div>
-            <button id="btn-logout" class="text-sm font-semibold text-yellow-500 hover:bg-zinc-800 px-4 py-2 rounded-lg transition border border-zinc-800 hover:border-yellow-500 mt-2 md:mt-0" data-i18n="logout">Keluar</button>
+            <button id="btn-logout" class="text-sm font-semibold text-yellow-500 hover:bg-zinc-800 px-4 py-2 rounded-lg transition border border-zinc-800 hover:border-yellow-500 w-full md:w-auto" data-i18n="logout">Keluar</button>
         </header>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -68,7 +76,7 @@
                         <p id="t-total" class="text-zinc-400 text-sm font-medium mb-1">Total Pengeluaran</p>
                         <p class="text-4xl font-black text-white" id="total-balance">0</p>
                     </div>
-                    <div class="glass p-6 rounded-2xl border-l-4 border-yellow-400">
+                    <div class="glass p-6 rounded-2xl border-l-4 border-yellow-400 flex flex-col justify-center">
                         <div class="flex items-center mb-2">
                             <span class="bg-yellow-400 text-black text-xs font-bold px-2 py-1 rounded uppercase tracking-wider mr-2">AI Insight</span>
                             <span class="text-yellow-400">⚡</span>
@@ -199,7 +207,6 @@
         function applyLanguage() {
             const t = i18n[currentLang];
             
-            // Text Content
             document.getElementById('t-subtitle').innerText = t.subtitle;
             document.getElementById('t-login').innerText = t.login;
             document.getElementById('t-hello').innerText = t.hello;
@@ -211,19 +218,15 @@
             document.getElementById('t-history').innerText = t.history;
             document.getElementById('t-realtime').innerText = t.realtime;
             
-            // Placeholders
             document.getElementById('desc').placeholder = t.desc_ph;
             document.getElementById('amount').placeholder = t.amount_ph;
 
-            // AI Suggestion Fallback
             const aiDisp = document.getElementById('ai-suggestion');
             if (aiDisp.innerText.includes('...') || transactions.length === 0) {
                 aiDisp.innerText = t.ai_waiting;
             }
 
-            // Document Language
             document.documentElement.lang = currentLang;
-            
             updateUI(); 
         }
 
@@ -233,18 +236,18 @@
             applyLanguage();
         });
 
-
         // --- 1. FIREBASE CONFIGURATION ---
         const firebaseConfig = {
             apiKey: "AIzaSyC71WCtUeWM-U2hAMESu-pTDxRScB5ZXJY",
             authDomain: "dorobo-d0846.firebaseapp.com",
             projectId: "dorobo-d0846",
             storageBucket: "dorobo-d0846.firebasestorage.app",
-            messagingSenderId: "7873066551",
-            appId: "1:37873066551:web:5777aa352ada9370cfd5b2"
+            messagingSenderId: "37873066551",
+            appId: "1:37873066551:web:5777aa352ada9370cfd5b2",
+            measurementId: "G-356QDLL560"
         };
 
-        if (firebaseConfig.apiKey !== "YOUR_API_KEY") {
+        if (!firebase.apps.length) {
             firebase.initializeApp(firebaseConfig);
         }
 
@@ -265,19 +268,14 @@
 
         // --- 3. AUTH LOGIC ---
         btnLogin.onclick = () => {
-            if (firebaseConfig.apiKey === "YOUR_API_KEY") {
-                renderApp({ displayName: "Admin" });
-            } else {
-                auth.signInWithPopup(provider).catch(console.error);
-            }
+            auth.signInWithPopup(provider).catch(error => {
+                console.error("Login Error:", error);
+                alert("Gagal login. Pastikan Anda menjalankan ini di Local Server (Live Server) atau sudah di-deploy ke Vercel.");
+            });
         };
 
         btnLogout.onclick = () => {
-            if (firebaseConfig.apiKey === "YOUR_API_KEY") {
-                location.reload();
-            } else {
-                auth.signOut().then(() => location.reload());
-            }
+            auth.signOut().then(() => location.reload());
         };
 
         auth.onAuthStateChanged(user => {
@@ -315,8 +313,6 @@
             document.getElementById('amount').value = '';
             
             updateUI();
-            
-            // Pass description AND amount to the backend
             generateAISuggestion(desc, amount);
         }
 
@@ -359,11 +355,7 @@
                 const response = await fetch('/api/insight', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ 
-                        description: desc, 
-                        amount: amount, 
-                        language: currentLang 
-                    })
+                    body: JSON.stringify({ description: desc, amount: amount, language: currentLang })
                 });
 
                 const data = await response.json();
@@ -376,7 +368,7 @@
             } catch (error) {
                 console.error("Gagal mengambil insight AI:", error);
                 const errTexts = {
-                    id: "Gagal terhubung ke server Dorobo.",
+                    id: "Gagal terhubung ke server Dorobo. (Pastikan jalan di Vercel Local)",
                     en: "Failed to connect to Dorobo server.",
                     zh: "无法连接到 Dorobo 服务器。",
                     ja: "Doroboサーバーへの接続に失敗しました。",
