@@ -121,6 +121,11 @@
                     </div>
                     <button onclick="addTransaction()" id="t-btn-save" class="mt-4 w-full bg-yellow-400 text-black font-black py-3 rounded-xl hover:bg-yellow-500 transition shadow-[0_0_10px_rgba(250,204,21,0.2)] uppercase tracking-wide">Simpan ke Buku Besar</button>
                 </div>
+
+                <div class="glass p-6 rounded-2xl border border-zinc-800">
+                    <h3 id="t-chart-title" class="font-bold text-yellow-400 mb-4">Grafik Cashflow</h3>
+                    <canvas id="financeChart" height="100"></canvas>
+                </div>
             </div>
 
             <div class="glass p-6 rounded-2xl h-fit border border-zinc-800">
@@ -141,7 +146,7 @@
                 inc_title: "Total Pemasukan", exp_title: "Total Pengeluaran", bal_title: "Saldo Bersih (Net)",
                 ai_waiting: "Dorobo sedang menganalisis data finansialmu...", rec_title: "Jurnal Transaksi Baru",
                 opt_exp: "Pengeluaran (Expense)", opt_inc: "Pemasukan (Income)", opt_tf: "Mutasi (Transfer)",
-                btn_save: "Simpan ke Buku Besar", ledger_title: "Buku Jurnal", realtime: "Live",
+                btn_save: "Simpan ke Buku Besar", ledger_title: "Buku Jurnal", realtime: "Live", chart_title: "Grafik Cashflow",
                 alert_fill: "Wajib isi Kategori, Entitas, dan Jumlah!", currency: "Rp"
             },
             en: {
@@ -149,7 +154,7 @@
                 inc_title: "Total Income", exp_title: "Total Expense", bal_title: "Net Balance",
                 ai_waiting: "Dorobo is analyzing your financial data...", rec_title: "New Transaction Journal",
                 opt_exp: "Expense", opt_inc: "Income", opt_tf: "Transfer",
-                btn_save: "Record to Ledger", ledger_title: "Ledger Book", realtime: "Live",
+                btn_save: "Record to Ledger", ledger_title: "Ledger Book", realtime: "Live", chart_title: "Cashflow Chart",
                 alert_fill: "Category, Entity, and Amount are required!", currency: "$"
             }
         };
@@ -169,6 +174,7 @@
             document.getElementById('opt-tf').innerText = t.opt_tf;
             document.getElementById('t-btn-save').innerText = t.btn_save;
             document.getElementById('t-ledger-title').innerText = t.ledger_title;
+            document.getElementById('t-chart-title').innerText = t.chart_title;
             updateUI();
         }
 
@@ -238,15 +244,18 @@
                 list.innerHTML += `
                     <div class="p-3 bg-zinc-900 rounded-xl border border-zinc-800 hover:border-zinc-700 transition">
                         <div class="flex justify-between font-bold text-sm">
-                            <span>${t.category} (${t.account})</span>
+                            <span>${t.category} <span class="text-zinc-500 font-normal">(${t.account})</span></span>
                             <span class="${clr}">${sign}${curr} ${t.amount.toLocaleString()}</span>
                         </div>
-                        <p class="text-xs text-zinc-500">${t.entity} - ${t.desc}</p>
+                        <p class="text-xs text-zinc-500">${t.entity} ${t.desc ? '- ' + t.desc : ''}</p>
                     </div>`;
             });
             document.getElementById('stat-income').innerText = curr + " " + inc.toLocaleString();
             document.getElementById('stat-expense').innerText = curr + " " + exp.toLocaleString();
             document.getElementById('stat-balance').innerText = curr + " " + (inc - exp).toLocaleString();
+            
+            // PENTING: Update Chart dipanggil kembali di sini!
+            updateChart();
         }
 
         // ==========================================
@@ -259,10 +268,15 @@
             const aiDisp = document.getElementById('ai-suggestion');
             aiDisp.innerText = "Dorobo sedang menganalisis data...";
 
+            if (API_KEY === "MASUKKAN_API_KEY_KAMU_DISINI") {
+                aiDisp.innerText = "Error: API Key AI belum dimasukkan di dalam script HTML (Baris 335).";
+                return;
+            }
+
             const systemPrompt = `Kamu adalah "Dorobo", asisten keuangan profesional yang cerdas, tegas, dan jujur. 
             Tugasmu: 
             1. Evaluasi transaksi yang baru saja dilakukan pengguna secara singkat. 
-            2. Berikan NASIHAT STRATEGIS manajemen keuangan (misal: pentingnya dana darurat, saran penghematan kategori tersebut, atau aturan 50/30/20). 
+            2. Berikan NASIHAT STRATEGIS manajemen keuangan (misal: pentingnya dana darurat, saran penghematan, atau aturan 50/30/20). 
             Maksimal 4 kalimat. Gunakan bahasa '${currentLang}'.`;
 
             const userPrompt = `Transaksi: ${tx.type}, Kategori: ${tx.category}, Nominal: ${tx.amount}, Rekening: ${tx.account}. Berikan audit dan saran keuangan!`;
@@ -291,9 +305,43 @@
                     aiDisp.innerText = "Error: Format respons AI tidak sesuai.";
                 }
             } catch (e) {
-                aiDisp.innerText = "Gagal terhubung ke AI. Pastikan API Key valid dan aktifkan ekstensi 'Allow CORS' jika mengetes di browser.";
+                aiDisp.innerText = "Gagal terhubung ke AI. Pastikan API Key valid dan aktifkan ekstensi 'Allow CORS' jika mengetes di browser secara lokal.";
                 console.error("AI Error:", e);
             }
+        }
+
+        // --- CHART LOGIC ---
+        let myChart;
+        function updateChart() {
+            const ctx = document.getElementById('financeChart').getContext('2d');
+            
+            // Ambil 5 data income dan expense terakhir
+            const incData = transactions.filter(t => t.type === 'income').slice(0, 5).map(t => t.amount).reverse();
+            const expData = transactions.filter(t => t.type === 'expense').slice(0, 5).map(t => t.amount).reverse();
+            const labels = ['T5', 'T4', 'T3', 'T2', 'Terbaru'];
+
+            if (myChart) myChart.destroy();
+            Chart.defaults.color = '#a1a1aa';
+            Chart.defaults.borderColor = '#27272a';
+
+            myChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        { label: 'Pemasukan', data: incData, backgroundColor: '#34d399', borderRadius: 4 },
+                        { label: 'Pengeluaran', data: expData, backgroundColor: '#fb7185', borderRadius: 4 }
+                    ]
+                },
+                options: { 
+                    scales: { 
+                        y: { beginAtZero: true }, 
+                        x: { grid: { display: false } } 
+                    },
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
+            });
         }
 
         applyLanguage();
