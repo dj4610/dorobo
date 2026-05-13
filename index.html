@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dorobo - Pro Finance Tracker</title>
+    <title>Dorobo - Pro AI Finance Tracker</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
@@ -25,9 +25,9 @@
         <select id="lang-selector" class="bg-zinc-900 border border-zinc-700 text-yellow-400 text-sm font-semibold rounded-lg focus:ring-yellow-400 outline-none p-2 cursor-pointer transition hover:border-yellow-500">
             <option value="id">🇮🇩 Indonesia</option>
             <option value="en">🇬🇧 English</option>
-            <option value="zh">🇨🇳 中文 (Chinese)</option>
-            <option value="ja">🇯🇵 日本語 (Japanese)</option>
-            <option value="ru">🇷🇺 Русский (Russian)</option>
+            <option value="zh">🇨🇳 中文</option>
+            <option value="ja">🇯🇵 日本語</option>
+            <option value="ru">🇷🇺 Русский</option>
         </select>
     </div>
 
@@ -74,12 +74,12 @@
                     </div>
                 </div>
 
-                <div class="glass p-6 md:p-8 rounded-3xl border border-yellow-400/50 shadow-[0_0_20px_rgba(250,204,21,0.15)] flex flex-col gap-4">
+                <div class="glass p-6 md:p-8 rounded-3xl border border-yellow-400/50 shadow-[0_0_30px_rgba(250,204,21,0.1)] flex flex-col gap-4">
                     <div class="flex items-center gap-3 border-b border-zinc-800 pb-3">
-                        <div class="bg-yellow-400 text-black text-sm font-black px-4 py-2 rounded-lg uppercase tracking-wider">AI Insight & Advice ⚡</div>
-                        <span class="text-zinc-400 text-sm hidden md:inline-block">Penasihat Keuangan Pribadi</span>
+                        <div class="bg-yellow-400 text-black text-xs font-black px-4 py-2 rounded-lg uppercase tracking-wider whitespace-nowrap">AI Advisor ⚡</div>
+                        <span class="text-zinc-400 text-sm italic hidden md:inline">"Jangan biarkan kebiasaan buruk mencuri masa depanmu"</span>
                     </div>
-                    <p class="text-zinc-200 text-base md:text-lg leading-relaxed font-medium" id="ai-suggestion">Menganalisis data finansialmu. Dorobo akan memberikan nasihat manajemen keuangan di sini...</p>
+                    <p class="text-zinc-200 text-base md:text-xl leading-relaxed font-medium" id="ai-suggestion">Mulai catat transaksi untuk mendapatkan audit dan nasihat keuangan dari Dorobo...</p>
                 </div>
 
                 <div class="glass p-6 rounded-2xl border border-zinc-800">
@@ -87,7 +87,7 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                         <div>
                             <label id="t-lbl-type" class="text-xs text-zinc-500 mb-1 block">Jenis Transaksi</label>
-                            <select id="tx-type" class="w-full bg-zinc-900 border border-zinc-700 text-white p-3 rounded-xl outline-none focus:border-yellow-400">
+                            <select id="tx-type" class="w-full bg-zinc-900 border border-zinc-700 text-white p-3 rounded-xl outline-none focus:border-yellow-400 transition">
                                 <option value="expense" id="opt-exp">Pengeluaran (Expense)</option>
                                 <option value="income" id="opt-inc">Pemasukan (Income)</option>
                                 <option value="transfer" id="opt-tf">Mutasi (Transfer)</option>
@@ -95,54 +95,40 @@
                         </div>
                         <div>
                             <label id="t-lbl-acc" class="text-xs text-zinc-500 mb-1 block">Sumber Akun</label>
-                            <select id="tx-account" class="w-full bg-zinc-900 border border-zinc-700 text-white p-3 rounded-xl outline-none focus:border-yellow-400">
-                                <optgroup label="Kas & Tunai" id="grp-kas">
+                            <select id="tx-account" class="w-full bg-zinc-900 border border-zinc-700 text-white p-3 rounded-xl outline-none focus:border-yellow-400 transition">
+                                <optgroup label="Tunai">
                                     <option value="Kas Tunai">Kas Tunai</option>
                                 </optgroup>
-                                <optgroup label="Tabungan & Giro" id="grp-bank">
-                                    <option value="Bank BCA">Bank BCA (Utama)</option>
-                                    <option value="Bank Mandiri">Bank Mandiri (Gaji)</option>
-                                    <option value="Bank Jago">Bank Jago (Darurat)</option>
-                                    <option value="GoPay">Saldo GoPay</option>
-                                    <option value="OVO">Saldo OVO</option>
+                                <optgroup label="Tabungan & Giro">
+                                    <option value="Bank BCA">Bank BCA</option>
+                                    <option value="Bank Mandiri">Bank Mandiri</option>
+                                    <option value="Bank Jago">Bank Jago</option>
+                                    <option value="GoPay/OVO">GoPay/OVO</option>
                                 </optgroup>
-                                <optgroup label="Kartu Kredit" id="grp-kk">
-                                    <option value="KK BCA">Kartu Kredit BCA</option>
-                                    <option value="KK Tokopedia Card">Tokopedia Card</option>
+                                <optgroup label="Kartu Kredit">
+                                    <option value="Kartu Kredit">Kartu Kredit</option>
                                 </optgroup>
                             </select>
                         </div>
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                        <div>
-                            <label id="t-lbl-cat" class="text-xs text-zinc-500 mb-1 block">Kategori (COA)</label>
-                            <input type="text" id="tx-category" placeholder="mis: F&B, Utang, Gaji..." class="w-full bg-zinc-900 border border-zinc-700 text-white p-3 rounded-xl outline-none focus:border-yellow-400">
-                        </div>
-                        <div>
-                            <label id="t-lbl-ent" class="text-xs text-zinc-500 mb-1 block">Entitas (Penerima/Pengirim)</label>
-                            <input type="text" id="tx-entity" placeholder="mis: Tokopedia, PLN, Rekan..." class="w-full bg-zinc-900 border border-zinc-700 text-white p-3 rounded-xl outline-none focus:border-yellow-400">
-                        </div>
+                        <input type="text" id="tx-category" placeholder="Kategori (mis: F&B)" class="bg-zinc-900 border border-zinc-700 text-white p-3 rounded-xl outline-none focus:border-yellow-400 transition">
+                        <input type="text" id="tx-entity" placeholder="Entitas (mis: Tokopedia)" class="bg-zinc-900 border border-zinc-700 text-white p-3 rounded-xl outline-none focus:border-yellow-400 transition">
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <input type="text" id="desc" placeholder="Catatan Spesifik" class="md:col-span-2 bg-zinc-900 border border-zinc-700 text-white p-3 rounded-xl outline-none focus:border-yellow-400">
-                        <input type="number" id="amount" placeholder="Jumlah" class="bg-zinc-900 border border-zinc-700 text-white p-3 rounded-xl outline-none focus:border-yellow-400">
+                        <input type="text" id="desc" placeholder="Catatan Spesifik" class="md:col-span-2 bg-zinc-900 border border-zinc-700 text-white p-3 rounded-xl outline-none focus:border-yellow-400 transition">
+                        <input type="number" id="amount" placeholder="Jumlah" class="bg-zinc-900 border border-zinc-700 text-white p-3 rounded-xl outline-none focus:border-yellow-400 transition">
                     </div>
-                    <button onclick="addTransaction()" id="t-btn-save" class="mt-4 w-full bg-yellow-400 text-black font-black py-3 rounded-xl hover:bg-yellow-500 transition shadow-[0_0_10px_rgba(250,204,21,0.2)] uppercase tracking-wide">Catat ke Buku Besar</button>
-                </div>
-
-                <div class="glass p-6 rounded-2xl border border-zinc-800">
-                    <h3 id="t-chart-title" class="font-bold text-yellow-400 mb-4">Grafik Cashflow</h3>
-                    <canvas id="financeChart" height="100"></canvas>
+                    <button onclick="addTransaction()" id="t-btn-save" class="mt-4 w-full bg-yellow-400 text-black font-black py-3 rounded-xl hover:bg-yellow-500 transition shadow-[0_0_10px_rgba(250,204,21,0.2)] uppercase tracking-wide">Simpan ke Buku Besar</button>
                 </div>
             </div>
 
             <div class="glass p-6 rounded-2xl h-fit border border-zinc-800">
                 <h3 class="font-bold text-yellow-400 mb-4 flex justify-between items-center">
                     <span id="t-ledger-title">Buku Jurnal</span>
-                    <span id="t-realtime" class="text-xs font-normal text-zinc-500 bg-zinc-900 px-2 py-1 rounded">Real-time</span>
+                    <span id="t-realtime" class="text-xs font-normal text-zinc-500 bg-zinc-900 px-2 py-1 rounded">Live</span>
                 </h3>
-                <div id="transaction-list" class="space-y-3 max-h-[700px] overflow-y-auto pr-2">
-                    </div>
+                <div id="transaction-list" class="space-y-3 max-h-[700px] overflow-y-auto pr-2"></div>
             </div>
         </div>
     </div>
@@ -153,95 +139,40 @@
             id: {
                 subtitle: "Sistem Akuntansi Pribadi & AI Finance Tracker.", login: "Masuk dengan Google", hello: "Halo,", logout: "Keluar",
                 inc_title: "Total Pemasukan", exp_title: "Total Pengeluaran", bal_title: "Saldo Bersih (Net)",
-                ai_waiting: "Menganalisis data finansialmu. Dorobo akan memberikan nasihat manajemen keuangan di sini...", rec_title: "Jurnal Transaksi Baru",
-                lbl_type: "Jenis Transaksi", opt_exp: "Pengeluaran (Expense)", opt_inc: "Pemasukan (Income)", opt_tf: "Mutasi (Transfer)",
-                lbl_acc: "Sumber Akun", lbl_cat: "Kategori (COA)", ph_cat: "mis: F&B, Utang, Gaji...",
-                lbl_ent: "Entitas (Penerima/Pengirim)", ph_ent: "mis: Tokopedia, PLN, Rekan...", ph_desc: "Catatan Spesifik (mis: Pakan 12 kucing)", ph_amount: "Jumlah",
-                btn_save: "Catat ke Buku Besar", chart_title: "Grafik Cashflow", ledger_title: "Buku Jurnal", realtime: "Real-time",
-                alert_fill: "Kategori, Entitas, dan Jumlah wajib diisi!", currency: "Rp", lbl_inc: "Pemasukan", lbl_exp: "Pengeluaran"
+                ai_waiting: "Dorobo sedang menganalisis data finansialmu...", rec_title: "Jurnal Transaksi Baru",
+                opt_exp: "Pengeluaran (Expense)", opt_inc: "Pemasukan (Income)", opt_tf: "Mutasi (Transfer)",
+                btn_save: "Simpan ke Buku Besar", ledger_title: "Buku Jurnal", realtime: "Live",
+                alert_fill: "Wajib isi Kategori, Entitas, dan Jumlah!", currency: "Rp"
             },
             en: {
                 subtitle: "Personal Accounting System & AI Finance Tracker.", login: "Sign in with Google", hello: "Hello,", logout: "Logout",
                 inc_title: "Total Income", exp_title: "Total Expense", bal_title: "Net Balance",
-                ai_waiting: "Analyzing your financial data. Dorobo will provide financial management advice here...", rec_title: "New Transaction Journal",
-                lbl_type: "Transaction Type", opt_exp: "Expense", opt_inc: "Income", opt_tf: "Transfer",
-                lbl_acc: "Account Source", lbl_cat: "Category (COA)", ph_cat: "e.g., F&B, Debt, Salary...",
-                lbl_ent: "Entity (Recipient/Sender)", ph_ent: "e.g., Amazon, Electric, Peer...", ph_desc: "Specific Note (e.g., Food for 12 cats)", ph_amount: "Amount",
-                btn_save: "Record to Ledger", chart_title: "Cashflow Chart", ledger_title: "Ledger Book", realtime: "Real-time",
-                alert_fill: "Category, Entity, and Amount are required!", currency: "$", lbl_inc: "Income", lbl_exp: "Expense"
-            },
-            zh: {
-                subtitle: "个人会计系统与AI财务跟踪器", login: "使用 Google 登录", hello: "你好，", logout: "登出",
-                inc_title: "总收入", exp_title: "总支出", bal_title: "净余额",
-                ai_waiting: "正在分析您的财务数据。Dorobo将在此处提供财务管理建议...", rec_title: "新交易日记账",
-                lbl_type: "交易类型", opt_exp: "支出 (Expense)", opt_inc: "收入 (Income)", opt_tf: "转账 (Transfer)",
-                lbl_acc: "账户来源", lbl_cat: "类别 (COA)", ph_cat: "例如：餐饮，债务，工资...",
-                lbl_ent: "实体（接收者/发送者）", ph_ent: "例如：淘宝，电费，朋友...", ph_desc: "具体备注", ph_amount: "金额",
-                btn_save: "记入总账", chart_title: "现金流图表", ledger_title: "分类账本", realtime: "实时",
-                alert_fill: "类别、实体和金额为必填项！", currency: "¥", lbl_inc: "收入", lbl_exp: "支出"
-            },
-            ja: {
-                subtitle: "個人会計システムとAI財務トラッカー", login: "Google でログイン", hello: "こんにちは、", logout: "ログアウト",
-                inc_title: "総収入", exp_title: "総支出", bal_title: "純残高",
-                ai_waiting: "財務データを分析中... Doroboがここに財務管理のアドバイスを提供します。", rec_title: "新しい取引仕訳",
-                lbl_type: "トランザクションタイプ", opt_exp: "支出 (Expense)", opt_inc: "収入 (Income)", opt_tf: "振替 (Transfer)",
-                lbl_acc: "アカウントソース", lbl_cat: "カテゴリ (COA)", ph_cat: "例：飲食、借金、給与...",
-                lbl_ent: "エンティティ（受取人/差出人）", ph_ent: "例：Amazon、電気、友人...", ph_desc: "具体的なメモ", ph_amount: "金額",
-                btn_save: "元帳に記録", chart_title: "キャッシュフローチャート", ledger_title: "元帳", realtime: "リアルタイム",
-                alert_fill: "カテゴリ、エンティティ、金額は必須です！", currency: "¥", lbl_inc: "収入", lbl_exp: "支出"
-            },
-            ru: {
-                subtitle: "Личная учетная система и AI Finance Tracker.", login: "Войти через Google", hello: "Здравствуйте,", logout: "Выйти",
-                inc_title: "Общий доход", exp_title: "Общие расходы", bal_title: "Чистый баланс",
-                ai_waiting: "Анализ ваших финансовых данных. Dorobo предоставит здесь советы по управлению финансами...", rec_title: "Новый журнал транзакций",
-                lbl_type: "Тип транзакции", opt_exp: "Расходы (Expense)", opt_inc: "Доходы (Income)", opt_tf: "Перевод (Transfer)",
-                lbl_acc: "Источник счета", lbl_cat: "Категория (COA)", ph_cat: "напр., Еда, Долг, Зарплата...",
-                lbl_ent: "Субъект (Получатель/Отправитель)", ph_ent: "напр., Amazon, Электричество, Друг...", ph_desc: "Конкретная заметка", ph_amount: "Сумма",
-                btn_save: "Записать в главную книгу", chart_title: "График денежных потоков", ledger_title: "Главная книга", realtime: "В реальном времени",
-                alert_fill: "Категория, Субъект и Сумма обязательны!", currency: "₽", lbl_inc: "Доходы", lbl_exp: "Расходы"
+                ai_waiting: "Dorobo is analyzing your financial data...", rec_title: "New Transaction Journal",
+                opt_exp: "Expense", opt_inc: "Income", opt_tf: "Transfer",
+                btn_save: "Record to Ledger", ledger_title: "Ledger Book", realtime: "Live",
+                alert_fill: "Category, Entity, and Amount are required!", currency: "$"
             }
         };
 
         let currentLang = localStorage.getItem('dorobo_lang') || 'id';
-        const langSelector = document.getElementById('lang-selector');
-        langSelector.value = currentLang;
-
         function applyLanguage() {
-            const t = i18n[currentLang];
+            const t = i18n[currentLang] || i18n['en'];
             document.getElementById('t-subtitle').innerText = t.subtitle;
             document.getElementById('t-login').innerText = t.login;
             document.getElementById('t-hello').innerText = t.hello;
-            document.getElementById('btn-logout').innerText = t.logout;
             document.getElementById('t-inc-title').innerText = t.inc_title;
             document.getElementById('t-exp-title').innerText = t.exp_title;
             document.getElementById('t-bal-title').innerText = t.bal_title;
             document.getElementById('t-rec-title').innerText = t.rec_title;
-            document.getElementById('t-lbl-type').innerText = t.lbl_type;
             document.getElementById('opt-exp').innerText = t.opt_exp;
             document.getElementById('opt-inc').innerText = t.opt_inc;
             document.getElementById('opt-tf').innerText = t.opt_tf;
-            document.getElementById('t-lbl-acc').innerText = t.lbl_acc;
-            document.getElementById('t-lbl-cat').innerText = t.lbl_cat;
-            document.getElementById('tx-category').placeholder = t.ph_cat;
-            document.getElementById('t-lbl-ent').innerText = t.lbl_ent;
-            document.getElementById('tx-entity').placeholder = t.ph_ent;
-            document.getElementById('desc').placeholder = t.ph_desc;
-            document.getElementById('amount').placeholder = t.ph_amount;
             document.getElementById('t-btn-save').innerText = t.btn_save;
-            document.getElementById('t-chart-title').innerText = t.chart_title;
             document.getElementById('t-ledger-title').innerText = t.ledger_title;
-            document.getElementById('t-realtime').innerText = t.realtime;
-
-            const aiDisp = document.getElementById('ai-suggestion');
-            if (aiDisp.innerText.includes('...') || transactions.length === 0) {
-                aiDisp.innerText = t.ai_waiting;
-            }
-
-            document.documentElement.lang = currentLang;
-            updateUI(); 
+            updateUI();
         }
 
-        langSelector.addEventListener('change', (e) => {
+        document.getElementById('lang-selector').addEventListener('change', (e) => {
             currentLang = e.target.value;
             localStorage.setItem('dorobo_lang', currentLang);
             applyLanguage();
@@ -254,16 +185,13 @@
             projectId: "dorobo-d0846",
             storageBucket: "dorobo-d0846.firebasestorage.app",
             messagingSenderId: "37873066551",
-            appId: "1:37873066551:web:5777aa352ada9370cfd5b2",
-            measurementId: "G-356QDLL560"
+            appId: "1:37873066551:web:5777aa352ada9370cfd5b2"
         };
-        if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
+        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const provider = new firebase.auth.GoogleAuthProvider();
 
-        let transactions = [];
-
-        document.getElementById('btn-login').onclick = () => auth.signInWithPopup(provider);
+        document.getElementById('btn-login').onclick = () => auth.signInWithPopup(provider).catch(e => alert("Buka via Live Server atau Cek CORS!"));
         document.getElementById('btn-logout').onclick = () => auth.signOut().then(() => location.reload());
 
         auth.onAuthStateChanged(user => {
@@ -271,164 +199,103 @@
                 document.getElementById('auth-overlay').classList.add('hidden');
                 document.getElementById('app-content').classList.remove('hidden');
                 document.getElementById('user-name').innerText = user.displayName;
-                loadData();
+                updateUI();
             }
         });
 
-        function loadData() {
-            const localData = localStorage.getItem('dorobo_ledger');
-            transactions = localData ? JSON.parse(localData) : [];
-            updateUI();
-        }
+        // --- LOGIC & UI ---
+        let transactions = JSON.parse(localStorage.getItem('dorobo_ledger') || '[]');
 
         function addTransaction() {
-            const type = document.getElementById('tx-type').value;
-            const account = document.getElementById('tx-account').value;
-            const category = document.getElementById('tx-category').value;
-            const entity = document.getElementById('tx-entity').value;
-            const desc = document.getElementById('desc').value;
-            const amount = parseFloat(document.getElementById('amount').value);
-            
-            if (!category || !entity || !amount) {
-                return alert(i18n[currentLang].alert_fill);
-            }
-
-            const newTx = { id: Date.now(), type, account, category, entity, desc, amount, date: new Date().toLocaleDateString() };
-            transactions.unshift(newTx);
+            const tx = {
+                id: Date.now(),
+                type: document.getElementById('tx-type').value,
+                account: document.getElementById('tx-account').value,
+                category: document.getElementById('tx-category').value,
+                entity: document.getElementById('tx-entity').value,
+                desc: document.getElementById('desc').value,
+                amount: parseFloat(document.getElementById('amount').value),
+                date: new Date().toLocaleDateString()
+            };
+            if (!tx.category || !tx.amount) return alert("Lengkapi data!");
+            transactions.unshift(tx);
             localStorage.setItem('dorobo_ledger', JSON.stringify(transactions));
-            
-            document.getElementById('desc').value = '';
-            document.getElementById('amount').value = '';
-            
             updateUI();
-            generateAISuggestion(newTx);
+            generateAISuggestion(tx);
         }
 
         function updateUI() {
-            const listContainer = document.getElementById('transaction-list');
-            listContainer.innerHTML = '';
-            let totalIncome = 0, totalExpense = 0;
-            const curr = i18n[currentLang].currency;
+            const list = document.getElementById('transaction-list');
+            list.innerHTML = '';
+            let inc = 0, exp = 0;
+            const curr = i18n[currentLang]?.currency || "Rp";
 
-            transactions.forEach(tx => {
-                const isInc = tx.type === 'income';
-                const isExp = tx.type === 'expense';
-                const isTf = tx.type === 'transfer';
-
-                if (isInc) totalIncome += tx.amount; 
-                else if (isExp) totalExpense += tx.amount;
-
-                let colorCls = 'text-zinc-400';
-                let sign = '';
-                
-                if (isInc) { colorCls = 'text-emerald-400'; sign = '+'; }
-                else if (isExp) { colorCls = 'text-rose-400'; sign = '-'; }
-                else if (isTf) { colorCls = 'text-blue-400'; sign = '⇄ '; }
-
-                listContainer.innerHTML += `
-                    <div class="p-3 bg-zinc-900 rounded-xl border border-zinc-800 hover:border-zinc-600 transition">
-                        <div class="flex justify-between items-start mb-1">
-                            <p class="font-bold text-white text-sm">${tx.category} <span class="text-zinc-500 font-normal">(${tx.account})</span></p>
-                            <p class="font-black ${colorCls} text-sm">${sign}${curr} ${tx.amount.toLocaleString()}</p>
+            transactions.forEach(t => {
+                if (t.type === 'income') inc += t.amount;
+                if (t.type === 'expense') exp += t.amount;
+                const clr = t.type === 'income' ? 'text-emerald-400' : (t.type === 'expense' ? 'text-rose-400' : 'text-blue-400');
+                const sign = t.type === 'income' ? '+' : (t.type === 'expense' ? '-' : '⇄ ');
+                list.innerHTML += `
+                    <div class="p-3 bg-zinc-900 rounded-xl border border-zinc-800 hover:border-zinc-700 transition">
+                        <div class="flex justify-between font-bold text-sm">
+                            <span>${t.category} (${t.account})</span>
+                            <span class="${clr}">${sign}${curr} ${t.amount.toLocaleString()}</span>
                         </div>
-                        <p class="text-xs text-zinc-400 mb-1">${tx.entity} ${tx.desc ? ' - ' + tx.desc : ''}</p>
-                        <p class="text-[10px] text-zinc-600">${tx.date}</p>
-                    </div>
-                `;
+                        <p class="text-xs text-zinc-500">${t.entity} - ${t.desc}</p>
+                    </div>`;
             });
-
-            document.getElementById('stat-income').innerText = `${curr} ${totalIncome.toLocaleString()}`;
-            document.getElementById('stat-expense').innerText = `${curr} ${totalExpense.toLocaleString()}`;
-            document.getElementById('stat-balance').innerText = `${curr} ${(totalIncome - totalExpense).toLocaleString()}`;
-            updateChart();
+            document.getElementById('stat-income').innerText = curr + " " + inc.toLocaleString();
+            document.getElementById('stat-expense').innerText = curr + " " + exp.toLocaleString();
+            document.getElementById('stat-balance').innerText = curr + " " + (inc - exp).toLocaleString();
         }
 
         // ==========================================
-        // KONFIGURASI AI LANGSUNG DI HTML
+        // KONFIGURASI AI (BASE URL DIPERBARUI)
         // ==========================================
-        // PENTING: Masukkan API Key kamu di bawah ini!
-        const AI_API_KEY = "6k2lTVPvI54Ju2uGh8ohVMx0zztjLeR_95-gU9BUtD0"; 
-        const AI_BASE_URL = "https://inference.canopywave.io/v1/chat/completions"; 
-        const AI_MODEL = "xiaomimimo/mimo-v2.5"; 
+        const API_KEY = "tp-so1vhm2z9zonerjdnrix80fanpcx82jundnfozkx2qn8fcei"; // GANTI DI SINI
+        const BASE_URL = "https://token-plan-sgp.xiaomimimo.com/v1/chat/completions";
 
         async function generateAISuggestion(tx) {
             const aiDisp = document.getElementById('ai-suggestion');
-            aiDisp.innerText = "Dorobo sedang menganalisis data finansialmu...";
+            aiDisp.innerText = "Dorobo sedang menganalisis data...";
 
-            if (AI_API_KEY === "MASUKKAN_API_KEY_MIMO_KAMU_DISINI") {
-                aiDisp.innerText = "Error: API Key AI belum dimasukkan di dalam script HTML (Baris 333).";
-                return;
-            }
+            const systemPrompt = `Kamu adalah "Dorobo", asisten keuangan profesional yang cerdas, tegas, dan jujur. 
+            Tugasmu: 
+            1. Evaluasi transaksi yang baru saja dilakukan pengguna secara singkat. 
+            2. Berikan NASIHAT STRATEGIS manajemen keuangan (misal: pentingnya dana darurat, saran penghematan kategori tersebut, atau aturan 50/30/20). 
+            Maksimal 4 kalimat. Gunakan bahasa '${currentLang}'.`;
 
-            const systemPrompt = `
-            Kamu adalah "Dorobo", AI penasihat dan auditor keuangan pribadi yang cerdas, profesional, tegas, dan sedikit sarkas.
-            Aturan Evaluasi & Nasihat:
-            1. Evaluasi singkat transaksi yang baru diinput (wajar, pemborosan, atau pergeseran aset).
-            2. BERIKAN NASIHAT BAGAIMANA MENGATUR KEUANGAN: Berikan satu tips praktis atau saran alokasi budget (misal: aturan 50/30/20, pentingnya dana darurat, cara menekan pengeluaran kategori tersebut, atau strategi menabung).
-            3. HANYA bahas keuangan. Maksimal 3-4 kalimat panjang.
-            4. Gunakan bahasa dengan kode: '${currentLang}'.
-            `;
-
-            const userPrompt = `Tipe Cashflow: ${tx.type}. Akun: ${tx.account}. Kategori: ${tx.category}. Entitas Penerima/Pemberi: ${tx.entity}. Catatan: ${tx.desc}. Nominal: ${tx.amount}. Berikan evaluasi audit dan nasihat keuanganmu!`;
+            const userPrompt = `Transaksi: ${tx.type}, Kategori: ${tx.category}, Nominal: ${tx.amount}, Rekening: ${tx.account}. Berikan audit dan saran keuangan!`;
 
             try {
-                const response = await fetch(AI_BASE_URL, {
+                const response = await fetch(BASE_URL, {
                     method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${AI_API_KEY}`,
-                        'Content-Type': 'application/json'
+                    headers: { 
+                        'Authorization': `Bearer ${API_KEY}`, 
+                        'Content-Type': 'application/json' 
                     },
                     body: JSON.stringify({
-                        model: AI_MODEL,
+                        model: "mimo-v2.5",
                         messages: [
                             { role: "system", content: systemPrompt },
                             { role: "user", content: userPrompt }
                         ],
                         temperature: 0.7,
-                        max_tokens: 300
+                        max_tokens: 400
                     })
                 });
-
                 const data = await response.json();
-                
-                if (data.choices && data.choices.length > 0) {
-                    aiDisp.innerHTML = data.choices[0].message.content.replace(/\n/g, '<br/>');
-                } else if (data.error) {
-                    aiDisp.innerText = "API Error: " + data.error.message;
+                if (data.choices && data.choices[0]) {
+                    aiDisp.innerHTML = data.choices[0].message.content.replace(/\n/g, '<br>');
                 } else {
                     aiDisp.innerText = "Error: Format respons AI tidak sesuai.";
                 }
-            } catch (error) {
-                console.error("AI Fetch Error:", error);
-                aiDisp.innerText = "Error: Koneksi ke API AI gagal. Pastikan komputer terhubung ke internet dan API Key sudah valid.";
+            } catch (e) {
+                aiDisp.innerText = "Gagal terhubung ke AI. Pastikan API Key valid dan aktifkan ekstensi 'Allow CORS' jika mengetes di browser.";
+                console.error("AI Error:", e);
             }
         }
 
-        let myChart;
-        function updateChart() {
-            const ctx = document.getElementById('financeChart').getContext('2d');
-            const incData = transactions.filter(t => t.type === 'income').slice(0, 5).map(t => t.amount).reverse();
-            const expData = transactions.filter(t => t.type === 'expense').slice(0, 5).map(t => t.amount).reverse();
-            const labels = ['T5', 'T4', 'T3', 'T2', 'Latest'];
-
-            if (myChart) myChart.destroy();
-            Chart.defaults.color = '#a1a1aa';
-            Chart.defaults.borderColor = '#27272a';
-
-            myChart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: labels,
-                    datasets: [
-                        { label: i18n[currentLang].lbl_inc, data: incData, backgroundColor: '#34d399', borderRadius: 4 },
-                        { label: i18n[currentLang].lbl_exp, data: expData, backgroundColor: '#fb7185', borderRadius: 4 }
-                    ]
-                },
-                options: { scales: { y: { beginAtZero: true }, x: { grid: { display: false } } } }
-            });
-        }
-
-        // Initialize language
         applyLanguage();
     </script>
 </body>
