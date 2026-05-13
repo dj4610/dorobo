@@ -124,7 +124,9 @@
 
                 <div class="glass p-6 rounded-2xl border border-zinc-800">
                     <h3 id="t-chart-title" class="font-bold text-yellow-400 mb-4">Grafik Cashflow</h3>
-                    <canvas id="financeChart" height="100"></canvas>
+                    <div class="relative h-64 w-full">
+                        <canvas id="financeChart"></canvas>
+                    </div>
                 </div>
             </div>
 
@@ -254,14 +256,13 @@
             document.getElementById('stat-expense').innerText = curr + " " + exp.toLocaleString();
             document.getElementById('stat-balance').innerText = curr + " " + (inc - exp).toLocaleString();
             
-            // PENTING: Update Chart dipanggil kembali di sini!
             updateChart();
         }
 
         // ==========================================
         // KONFIGURASI AI (BASE URL DIPERBARUI)
         // ==========================================
-        const API_KEY = "tp-so1vhm2z9zonerjdnrix80fanpcx82jundnfozkx2qn8fcei"; // GANTI DI SINI
+        const API_KEY = "MASUKKAN_API_KEY_KAMU_DISINI"; // GANTI DI SINI
         const BASE_URL = "https://token-plan-sgp.xiaomimimo.com/v1/chat/completions";
 
         async function generateAISuggestion(tx) {
@@ -269,7 +270,7 @@
             aiDisp.innerText = "Dorobo sedang menganalisis data...";
 
             if (API_KEY === "MASUKKAN_API_KEY_KAMU_DISINI") {
-                aiDisp.innerText = "Error: API Key AI belum dimasukkan di dalam script HTML (Baris 335).";
+                aiDisp.innerText = "Error: API Key AI belum dimasukkan di dalam script HTML (Baris 337).";
                 return;
             }
 
@@ -315,7 +316,6 @@
         function updateChart() {
             const ctx = document.getElementById('financeChart').getContext('2d');
             
-            // Ambil 5 data income dan expense terakhir
             const incData = transactions.filter(t => t.type === 'income').slice(0, 5).map(t => t.amount).reverse();
             const expData = transactions.filter(t => t.type === 'expense').slice(0, 5).map(t => t.amount).reverse();
             const labels = ['T5', 'T4', 'T3', 'T2', 'Terbaru'];
