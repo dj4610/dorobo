@@ -16,7 +16,7 @@
         ::-webkit-scrollbar-track { background: #18181b; }
         ::-webkit-scrollbar-thumb { background: #3f3f46; border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: #facc15; }
-        select option { background-color: #18181b; color: #f4f4f5; }
+        select option, select optgroup { background-color: #18181b; color: #f4f4f5; }
     </style>
 </head>
 <body class="p-4 md:p-8 min-h-screen relative">
@@ -83,20 +83,37 @@
                     <h3 id="t-rec-title" class="font-bold text-yellow-400 mb-4 border-b border-zinc-800 pb-2">Jurnal Transaksi Baru</h3>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                         <div>
-                            <label id="t-lbl-type" class="text-xs text-zinc-500 mb-1 block">Jenis Arus Kas</label>
+                            <label id="t-lbl-type" class="text-xs text-zinc-500 mb-1 block">Jenis Transaksi</label>
                             <select id="tx-type" class="w-full bg-zinc-900 border border-zinc-700 text-white p-3 rounded-xl outline-none focus:border-yellow-400">
                                 <option value="expense" id="opt-exp">Pengeluaran (Expense)</option>
                                 <option value="income" id="opt-inc">Pemasukan (Income)</option>
+                                <option value="transfer" id="opt-tf">Mutasi (Transfer)</option>
                             </select>
                         </div>
                         <div>
-                            <label id="t-lbl-acc" class="text-xs text-zinc-500 mb-1 block">Sumber Akun (Kas/Bank/KK)</label>
+                            <label id="t-lbl-acc" class="text-xs text-zinc-500 mb-1 block">Sumber Akun</label>
                             <select id="tx-account" class="w-full bg-zinc-900 border border-zinc-700 text-white p-3 rounded-xl outline-none focus:border-yellow-400">
-                                <option value="Kas Tunai">Kas Tunai</option>
-                                <option value="Bank BCA">Bank BCA</option>
-                                <option value="Bank Mandiri">Bank Mandiri</option>
-                                <option value="e-Wallet">e-Wallet (Gopay/OVO)</option>
-                                <option value="Kartu Kredit">Kartu Kredit</option>
+                                <optgroup label="Kas & Tunai" id="grp-kas">
+                                    <option value="Kas Tunai">Kas Tunai</option>
+                                </optgroup>
+                                <optgroup label="Tabungan & Giro" id="grp-bank">
+                                    <option value="T Bank-0001">T Bank-0001</option>
+                                    <option value="T Bank-0002">T Bank-0002</option>
+                                    <option value="T Bank-0003">T Bank-0003</option>
+                                    <option value="T Bank-0004">T Bank-0004</option>
+                                    <option value="T Bank-0005">T Bank-0005</option>
+                                    <option value="T Bank-0006">T Bank-0006</option>
+                                    <option value="T Bank-0007">T Bank-0007</option>
+                                    <option value="T Bank-0008">T Bank-0008</option>
+                                    <option value="G Bank-0009">G Bank-0009</option>
+                                </optgroup>
+                                <optgroup label="Kartu Kredit" id="grp-kk">
+                                    <option value="KK Bank-0001">KK Bank-0001</option>
+                                    <option value="KK Bank-0002">KK Bank-0002</option>
+                                    <option value="KK Bank-0003">KK Bank-0003</option>
+                                    <option value="KK Bank-0004">KK Bank-0004</option>
+                                    <option value="KK Bank-0005">KK Bank-0005</option>
+                                </optgroup>
                             </select>
                         </div>
                     </div>
@@ -107,7 +124,7 @@
                         </div>
                         <div>
                             <label id="t-lbl-ent" class="text-xs text-zinc-500 mb-1 block">Entitas (Penerima/Pengirim)</label>
-                            <input type="text" id="tx-entity" placeholder="mis: Tokopedia, PLN, Boss..." class="w-full bg-zinc-900 border border-zinc-700 text-white p-3 rounded-xl outline-none focus:border-yellow-400">
+                            <input type="text" id="tx-entity" placeholder="mis: Tokopedia, PLN, Pindah Saldo..." class="w-full bg-zinc-900 border border-zinc-700 text-white p-3 rounded-xl outline-none focus:border-yellow-400">
                         </div>
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -141,9 +158,9 @@
                 subtitle: "Sistem Akuntansi Pribadi & AI Finance Tracker.", login: "Masuk dengan Google", hello: "Halo,", logout: "Keluar",
                 inc_title: "Total Pemasukan", exp_title: "Total Pengeluaran", bal_title: "Saldo Bersih (Net)",
                 ai_waiting: "Menganalisis pergerakan aset dan liabilitasmu...", rec_title: "Jurnal Transaksi Baru",
-                lbl_type: "Jenis Arus Kas", opt_exp: "Pengeluaran (Expense)", opt_inc: "Pemasukan (Income)",
-                lbl_acc: "Sumber Akun (Kas/Bank/KK)", lbl_cat: "Kategori (COA)", ph_cat: "mis: F&B, Utang, Gaji...",
-                lbl_ent: "Entitas (Penerima/Pengirim)", ph_ent: "mis: Tokopedia, PLN, Boss...", ph_desc: "Catatan Spesifik", ph_amount: "Jumlah",
+                lbl_type: "Jenis Transaksi", opt_exp: "Pengeluaran (Expense)", opt_inc: "Pemasukan (Income)", opt_tf: "Mutasi (Transfer)",
+                lbl_acc: "Sumber Akun", lbl_cat: "Kategori (COA)", ph_cat: "mis: F&B, Utang, Gaji...",
+                lbl_ent: "Entitas (Penerima/Pengirim)", ph_ent: "mis: Tokopedia, PLN, Rekan...", ph_desc: "Catatan Spesifik", ph_amount: "Jumlah",
                 btn_save: "Catat ke Buku Besar", chart_title: "Grafik Cashflow", ledger_title: "Buku Jurnal", realtime: "Real-time",
                 alert_fill: "Kategori, Entitas, dan Jumlah wajib diisi!", currency: "Rp", lbl_inc: "Pemasukan", lbl_exp: "Pengeluaran"
             },
@@ -151,9 +168,9 @@
                 subtitle: "Personal Accounting System & AI Finance Tracker.", login: "Sign in with Google", hello: "Hello,", logout: "Logout",
                 inc_title: "Total Income", exp_title: "Total Expense", bal_title: "Net Balance",
                 ai_waiting: "Analyzing your asset and liability movements...", rec_title: "New Transaction Journal",
-                lbl_type: "Cashflow Type", opt_exp: "Expense", opt_inc: "Income",
-                lbl_acc: "Account Source (Cash/Bank/CC)", lbl_cat: "Category (COA)", ph_cat: "e.g., F&B, Debt, Salary...",
-                lbl_ent: "Entity (Recipient/Sender)", ph_ent: "e.g., Amazon, Electric, Boss...", ph_desc: "Specific Note", ph_amount: "Amount",
+                lbl_type: "Transaction Type", opt_exp: "Expense", opt_inc: "Income", opt_tf: "Transfer",
+                lbl_acc: "Account Source", lbl_cat: "Category (COA)", ph_cat: "e.g., F&B, Debt, Salary...",
+                lbl_ent: "Entity (Recipient/Sender)", ph_ent: "e.g., Amazon, Electric, Peer...", ph_desc: "Specific Note", ph_amount: "Amount",
                 btn_save: "Record to Ledger", chart_title: "Cashflow Chart", ledger_title: "Ledger Book", realtime: "Real-time",
                 alert_fill: "Category, Entity, and Amount are required!", currency: "$", lbl_inc: "Income", lbl_exp: "Expense"
             },
@@ -161,9 +178,9 @@
                 subtitle: "个人会计系统与AI财务跟踪器", login: "使用 Google 登录", hello: "你好，", logout: "登出",
                 inc_title: "总收入", exp_title: "总支出", bal_title: "净余额",
                 ai_waiting: "正在分析您的资产和负债变动...", rec_title: "新交易日记账",
-                lbl_type: "现金流类型", opt_exp: "支出 (Expense)", opt_inc: "收入 (Income)",
-                lbl_acc: "账户来源（现金/银行/信用卡）", lbl_cat: "类别 (COA)", ph_cat: "例如：餐饮，债务，工资...",
-                lbl_ent: "实体（接收者/发送者）", ph_ent: "例如：淘宝，电费，老板...", ph_desc: "具体备注", ph_amount: "金额",
+                lbl_type: "交易类型", opt_exp: "支出 (Expense)", opt_inc: "收入 (Income)", opt_tf: "转账 (Transfer)",
+                lbl_acc: "账户来源", lbl_cat: "类别 (COA)", ph_cat: "例如：餐饮，债务，工资...",
+                lbl_ent: "实体（接收者/发送者）", ph_ent: "例如：淘宝，电费，朋友...", ph_desc: "具体备注", ph_amount: "金额",
                 btn_save: "记入总账", chart_title: "现金流图表", ledger_title: "分类账本", realtime: "实时",
                 alert_fill: "类别、实体和金额为必填项！", currency: "¥", lbl_inc: "收入", lbl_exp: "支出"
             },
@@ -171,9 +188,9 @@
                 subtitle: "個人会計システムとAI財務トラッカー", login: "Google でログイン", hello: "こんにちは、", logout: "ログアウト",
                 inc_title: "総収入", exp_title: "総支出", bal_title: "純残高",
                 ai_waiting: "資産と負債の動きを分析中...", rec_title: "新しい取引仕訳",
-                lbl_type: "キャッシュフローの種類", opt_exp: "支出 (Expense)", opt_inc: "収入 (Income)",
-                lbl_acc: "アカウントのソース（現金/銀行/CC）", lbl_cat: "カテゴリ (COA)", ph_cat: "例：飲食、借金、給与...",
-                lbl_ent: "エンティティ（受取人/差出人）", ph_ent: "例：Amazon、電気、上司...", ph_desc: "具体的なメモ", ph_amount: "金額",
+                lbl_type: "トランザクションタイプ", opt_exp: "支出 (Expense)", opt_inc: "収入 (Income)", opt_tf: "振替 (Transfer)",
+                lbl_acc: "アカウントソース", lbl_cat: "カテゴリ (COA)", ph_cat: "例：飲食、借金、給与...",
+                lbl_ent: "エンティティ（受取人/差出人）", ph_ent: "例：Amazon、電気、友人...", ph_desc: "具体的なメモ", ph_amount: "金額",
                 btn_save: "元帳に記録", chart_title: "キャッシュフローチャート", ledger_title: "元帳", realtime: "リアルタイム",
                 alert_fill: "カテゴリ、エンティティ、金額は必須です！", currency: "¥", lbl_inc: "収入", lbl_exp: "支出"
             },
@@ -181,9 +198,9 @@
                 subtitle: "Личная учетная система и AI Finance Tracker.", login: "Войти через Google", hello: "Здравствуйте,", logout: "Выйти",
                 inc_title: "Общий доход", exp_title: "Общие расходы", bal_title: "Чистый баланс",
                 ai_waiting: "Анализ движения ваших активов и обязательств...", rec_title: "Новый журнал транзакций",
-                lbl_type: "Тип денежного потока", opt_exp: "Расходы (Expense)", opt_inc: "Доходы (Income)",
-                lbl_acc: "Источник счета (Наличные/Банк/КК)", lbl_cat: "Категория (COA)", ph_cat: "напр., Еда, Долг, Зарплата...",
-                lbl_ent: "Субъект (Получатель/Отправитель)", ph_ent: "напр., Amazon, Электричество, Босс...", ph_desc: "Конкретная заметка", ph_amount: "Сумма",
+                lbl_type: "Тип транзакции", opt_exp: "Расходы (Expense)", opt_inc: "Доходы (Income)", opt_tf: "Перевод (Transfer)",
+                lbl_acc: "Источник счета", lbl_cat: "Категория (COA)", ph_cat: "напр., Еда, Долг, Зарплата...",
+                lbl_ent: "Субъект (Получатель/Отправитель)", ph_ent: "напр., Amazon, Электричество, Друг...", ph_desc: "Конкретная заметка", ph_amount: "Сумма",
                 btn_save: "Записать в главную книгу", chart_title: "График денежных потоков", ledger_title: "Главная книга", realtime: "В реальном времени",
                 alert_fill: "Категория, Субъект и Сумма обязательны!", currency: "₽", lbl_inc: "Доходы", lbl_exp: "Расходы"
             }
@@ -196,7 +213,6 @@
         function applyLanguage() {
             const t = i18n[currentLang];
             
-            // Text Replacements
             document.getElementById('t-subtitle').innerText = t.subtitle;
             document.getElementById('t-login').innerText = t.login;
             document.getElementById('t-hello').innerText = t.hello;
@@ -208,6 +224,7 @@
             document.getElementById('t-lbl-type').innerText = t.lbl_type;
             document.getElementById('opt-exp').innerText = t.opt_exp;
             document.getElementById('opt-inc').innerText = t.opt_inc;
+            document.getElementById('opt-tf').innerText = t.opt_tf;
             document.getElementById('t-lbl-acc').innerText = t.lbl_acc;
             document.getElementById('t-lbl-cat').innerText = t.lbl_cat;
             document.getElementById('tx-category').placeholder = t.ph_cat;
@@ -300,10 +317,19 @@
 
             transactions.forEach(tx => {
                 const isInc = tx.type === 'income';
-                if (isInc) totalIncome += tx.amount; else totalExpense += tx.amount;
+                const isExp = tx.type === 'expense';
+                const isTf = tx.type === 'transfer';
 
-                const colorCls = isInc ? 'text-emerald-400' : 'text-rose-400';
-                const sign = isInc ? '+' : '-';
+                // Mutasi (transfer) tidak menambah income/expense global
+                if (isInc) totalIncome += tx.amount; 
+                else if (isExp) totalExpense += tx.amount;
+
+                let colorCls = 'text-zinc-400';
+                let sign = '';
+                
+                if (isInc) { colorCls = 'text-emerald-400'; sign = '+'; }
+                else if (isExp) { colorCls = 'text-rose-400'; sign = '-'; }
+                else if (isTf) { colorCls = 'text-blue-400'; sign = '⇄ '; }
 
                 listContainer.innerHTML += `
                     <div class="p-3 bg-zinc-900 rounded-xl border border-zinc-800 hover:border-zinc-600 transition">
@@ -343,6 +369,7 @@
         let myChart;
         function updateChart() {
             const ctx = document.getElementById('financeChart').getContext('2d');
+            // Chart hanya merender income dan expense
             const incData = transactions.filter(t => t.type === 'income').slice(0, 5).map(t => t.amount).reverse();
             const expData = transactions.filter(t => t.type === 'expense').slice(0, 5).map(t => t.amount).reverse();
             const labels = ['T5', 'T4', 'T3', 'T2', 'Latest'];
