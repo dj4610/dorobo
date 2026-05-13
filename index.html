@@ -75,11 +75,16 @@
                 </div>
 
                 <div class="glass p-6 md:p-8 rounded-3xl border border-yellow-400/50 shadow-[0_0_30px_rgba(250,204,21,0.1)] flex flex-col gap-4">
-                    <div class="flex items-center gap-3 border-b border-zinc-800 pb-3">
-                        <div class="bg-yellow-400 text-black text-xs font-black px-4 py-2 rounded-lg uppercase tracking-wider whitespace-nowrap">AI Advisor ⚡</div>
-                        <span class="text-zinc-400 text-sm italic hidden md:inline">"Jangan biarkan kebiasaan buruk mencuri masa depanmu"</span>
+                    <div class="flex items-center justify-between border-b border-zinc-800 pb-3">
+                        <div class="flex items-center gap-3">
+                            <div class="bg-yellow-400 text-black text-xs font-black px-4 py-2 rounded-lg uppercase tracking-wider whitespace-nowrap">AI Advisor ⚡</div>
+                            <span class="text-zinc-400 text-sm italic hidden md:inline">"Audit keuangan pribadimu dalam satu klik"</span>
+                        </div>
                     </div>
-                    <p class="text-zinc-200 text-base md:text-xl leading-relaxed font-medium" id="ai-suggestion">Mulai catat transaksi untuk mendapatkan audit dan nasihat keuangan dari Dorobo...</p>
+                    
+                    <p class="text-zinc-200 text-base md:text-lg leading-relaxed font-medium min-h-[80px]" id="ai-suggestion">Klik tombol di bawah ini untuk membiarkan Dorobo membaca buku jurnalmu dan menganalisis kesehatan keuanganmu.</p>
+                    
+                    <button onclick="analyzeHistory()" id="t-btn-advice" class="mt-2 self-start bg-zinc-800 text-yellow-400 border border-yellow-400/30 hover:bg-yellow-400 hover:text-black font-bold py-2.5 px-6 rounded-xl transition shadow-lg">Analisis Riwayat & Beri Saran</button>
                 </div>
 
                 <div class="glass p-6 rounded-2xl border border-zinc-800">
@@ -146,18 +151,18 @@
             id: {
                 subtitle: "Sistem Akuntansi Pribadi & AI Finance Tracker.", login: "Masuk dengan Google", hello: "Halo,", logout: "Keluar",
                 inc_title: "Total Pemasukan", exp_title: "Total Pengeluaran", bal_title: "Saldo Bersih (Net)",
-                ai_waiting: "Dorobo sedang menganalisis data finansialmu...", rec_title: "Jurnal Transaksi Baru",
+                ai_waiting: "Dorobo sedang membaca jurnal keuanganmu...", rec_title: "Jurnal Transaksi Baru",
                 opt_exp: "Pengeluaran (Expense)", opt_inc: "Pemasukan (Income)", opt_tf: "Mutasi (Transfer)",
-                btn_save: "Simpan ke Buku Besar", ledger_title: "Buku Jurnal", realtime: "Live", chart_title: "Grafik Cashflow",
-                alert_fill: "Wajib isi Kategori, Entitas, dan Jumlah!", currency: "Rp"
+                btn_save: "Simpan ke Buku Besar", btn_advice: "Analisis Riwayat & Beri Saran", ledger_title: "Buku Jurnal", realtime: "Live", chart_title: "Grafik Cashflow",
+                alert_fill: "Wajib isi Kategori, Entitas, dan Jumlah!", currency: "Rp", err_empty: "Belum ada riwayat transaksi untuk dianalisis!"
             },
             en: {
                 subtitle: "Personal Accounting System & AI Finance Tracker.", login: "Sign in with Google", hello: "Hello,", logout: "Logout",
                 inc_title: "Total Income", exp_title: "Total Expense", bal_title: "Net Balance",
-                ai_waiting: "Dorobo is analyzing your financial data...", rec_title: "New Transaction Journal",
+                ai_waiting: "Dorobo is reading your financial ledger...", rec_title: "New Transaction Journal",
                 opt_exp: "Expense", opt_inc: "Income", opt_tf: "Transfer",
-                btn_save: "Record to Ledger", ledger_title: "Ledger Book", realtime: "Live", chart_title: "Cashflow Chart",
-                alert_fill: "Category, Entity, and Amount are required!", currency: "$"
+                btn_save: "Record to Ledger", btn_advice: "Analyze History & Get Advice", ledger_title: "Ledger Book", realtime: "Live", chart_title: "Cashflow Chart",
+                alert_fill: "Category, Entity, and Amount are required!", currency: "$", err_empty: "No transaction history to analyze yet!"
             }
         };
 
@@ -175,6 +180,7 @@
             document.getElementById('opt-inc').innerText = t.opt_inc;
             document.getElementById('opt-tf').innerText = t.opt_tf;
             document.getElementById('t-btn-save').innerText = t.btn_save;
+            document.getElementById('t-btn-advice').innerText = t.btn_advice;
             document.getElementById('t-ledger-title').innerText = t.ledger_title;
             document.getElementById('t-chart-title').innerText = t.chart_title;
             updateUI();
@@ -225,11 +231,17 @@
                 amount: parseFloat(document.getElementById('amount').value),
                 date: new Date().toLocaleDateString()
             };
-            if (!tx.category || !tx.amount) return alert("Lengkapi data!");
+            if (!tx.category || !tx.amount) return alert(i18n[currentLang]?.alert_fill || "Lengkapi data!");
+            
             transactions.unshift(tx);
             localStorage.setItem('dorobo_ledger', JSON.stringify(transactions));
+            
+            // Kosongkan form setelah input
+            document.getElementById('desc').value = '';
+            document.getElementById('amount').value = '';
+            
             updateUI();
-            generateAISuggestion(tx);
+            // AI TIDAK LAGI DIPANGGIL OTOMATIS DI SINI. HARUS LEWAT TOMBOL.
         }
 
         function updateUI() {
@@ -260,27 +272,41 @@
         }
 
         // ==========================================
-        // KONFIGURASI AI (BASE URL DIPERBARUI)
+        // KONFIGURASI AI: MEMBACA RIWAYAT BUKU BESAR
         // ==========================================
         const API_KEY = "tp-so1vhm2z9zonerjdnrix80fanpcx82jundnfozkx2qn8fcei"; // GANTI DI SINI
         const BASE_URL = "https://token-plan-sgp.xiaomimimo.com/v1/chat/completions";
 
-        async function generateAISuggestion(tx) {
+        async function analyzeHistory() {
             const aiDisp = document.getElementById('ai-suggestion');
-            aiDisp.innerText = "Dorobo sedang menganalisis data...";
+            const btnAdvice = document.getElementById('t-btn-advice');
+            
+            if (transactions.length === 0) {
+                return alert(i18n[currentLang]?.err_empty || "Belum ada riwayat transaksi!");
+            }
 
             if (API_KEY === "MASUKKAN_API_KEY_KAMU_DISINI") {
-                aiDisp.innerText = "Error: API Key AI belum dimasukkan di dalam script HTML (Baris 337).";
+                aiDisp.innerText = "Error: API Key AI belum dimasukkan di dalam script HTML (Baris 344).";
                 return;
             }
 
-            const systemPrompt = `Kamu adalah "Dorobo", asisten keuangan profesional yang cerdas, tegas, dan jujur. 
-            Tugasmu: 
-            1. Evaluasi transaksi yang baru saja dilakukan pengguna secara singkat. 
-            2. Berikan NASIHAT STRATEGIS manajemen keuangan (misal: pentingnya dana darurat, saran penghematan, atau aturan 50/30/20). 
-            Maksimal 4 kalimat. Gunakan bahasa '${currentLang}'.`;
+            aiDisp.innerText = i18n[currentLang]?.ai_waiting || "Dorobo sedang membaca jurnal keuanganmu...";
+            btnAdvice.disabled = true;
+            btnAdvice.classList.add("opacity-50", "cursor-not-allowed");
 
-            const userPrompt = `Transaksi: ${tx.type}, Kategori: ${tx.category}, Nominal: ${tx.amount}, Rekening: ${tx.account}. Berikan audit dan saran keuangan!`;
+            // Ambil maksimal 15 transaksi terakhir agar tidak kelebihan batas Token
+            const recentTxs = transactions.slice(0, 15);
+            let txSummary = recentTxs.map(t => 
+                `- [${t.type.toUpperCase()}] Kategori: ${t.category}, Nominal: ${t.amount}, Ke/Dari: ${t.entity}`
+            ).join("\n");
+
+            const systemPrompt = `Kamu adalah "Dorobo", auditor keuangan pribadi yang cerdas, tegas, dan blak-blakan. 
+            Tugasmu:
+            1. Analisis BUKU JURNAL pengguna di bawah ini untuk melihat pola (apakah sehat, boros di kategori tertentu, dll).
+            2. Berikan NASIHAT STRATEGIS menyeluruh (seperti strategi alokasi, peringatan pemborosan, atau motivasi menabung).
+            Maksimal 4 paragraf pendek. Gunakan formatting text (bold, list) jika perlu. Gunakan bahasa '${currentLang}'.`;
+
+            const userPrompt = `Ini adalah riwayat 15 transaksi terakhirkut:\n${txSummary}\n\nTolong audit riwayat ini dan beri saya saran keuangan!`;
 
             try {
                 const response = await fetch(BASE_URL, {
@@ -296,18 +322,23 @@
                             { role: "user", content: userPrompt }
                         ],
                         temperature: 0.7,
-                        max_tokens: 400
+                        max_tokens: 500
                     })
                 });
+                
                 const data = await response.json();
                 if (data.choices && data.choices[0]) {
+                    // Konversi baris baru menjadi tag <br>
                     aiDisp.innerHTML = data.choices[0].message.content.replace(/\n/g, '<br>');
                 } else {
                     aiDisp.innerText = "Error: Format respons AI tidak sesuai.";
                 }
             } catch (e) {
-                aiDisp.innerText = "Gagal terhubung ke AI. Pastikan API Key valid dan aktifkan ekstensi 'Allow CORS' jika mengetes di browser secara lokal.";
+                aiDisp.innerText = "Gagal terhubung ke AI. Pastikan API Key valid dan aktifkan ekstensi 'Allow CORS'.";
                 console.error("AI Error:", e);
+            } finally {
+                btnAdvice.disabled = false;
+                btnAdvice.classList.remove("opacity-50", "cursor-not-allowed");
             }
         }
 
