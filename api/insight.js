@@ -1,33 +1,31 @@
 export default async function handler(req, res) {
-    // Hanya menerima method POST
-    if (req.method !== 'POST') {
-        return res.status(405).json({ error: 'Method Not Allowed' });
-    }
+    if (req.method !== 'POST') return res.status(405).json({ error: 'Method Not Allowed' });
 
-    const { description, amount, language } = req.body;
+    const { txData, language } = req.body;
 
-    // Mengambil API Key dan Base URL dari Environment Variables Vercel
     const AI_API_KEY = process.env.AI_API_KEY; 
     const AI_BASE_URL = process.env.AI_BASE_URL; 
     const AI_MODEL = process.env.AI_MODEL || "mimo-v2.5"; 
 
     if (!AI_API_KEY || !AI_BASE_URL) {
-        return res.status(500).json({ suggestion: "Sistem AI belum dikonfigurasi oleh Admin." });
+        return res.status(500).json({ suggestion: "Sistem AI belum dikonfigurasi." });
     }
 
-    // ==========================================
-    // SYSTEM PROMPT: Mengunci Skill AI (Dorobo)
-    // ==========================================
+    // Mengadaptasi karakter Dorobo sebagai auditor dari Chart of Accounts
     const systemPrompt = `
-    Kamu adalah "Dorobo", asisten pelacak keuangan (AI Finance Tracker) yang sangat disiplin, tegas, dan sedikit sarkas.
-    Aturan Mutlak:
-    1. Kamu HANYA BOLEH merespons topik tentang keuangan pribadi, pengeluaran, tabungan, dan investasi.
-    2. Jika pengguna membicarakan hal di luar keuangan (misal: cuaca, coding, politik, lelucon umum), TOLAK dengan tegas dan ingatkan bahwa kamu adalah penjaga dompet mereka, bukan chatbot biasa.
-    3. Berikan komentar evaluasi singkat (maksimal 2 kalimat) terhadap pengeluaran yang baru dicatat pengguna.
-    4. Kamu harus merespons dalam bahasa berikut berdasarkan kode ini: '${language}' (id=Indonesia, en=Inggris, zh=Mandarin, ja=Jepang, ru=Rusia).
+    Kamu adalah "Dorobo", AI auditor keuangan pribadi yang tegas, profesional, dan sedikit sarkas.
+    Sistem baru mencatat jurnal berbasis COA (Chart of Accounts), Akun Kas, dan Entitas.
+    
+    Aturan Evaluasi:
+    1. Jika TIPE transaksi adalah 'income' (Pendapatan), berikan komentar apresiasi tapi peringatkan agar uang tidak dihamburkan ke hal bodoh.
+    2. Jika TIPE transaksi adalah 'expense' (Pengeluaran), evaluasi KATEGORI (COA) dan ENTITAS tersebut. Apakah itu wajar atau pemborosan?
+    3. HANYA bahas data keuangan ini. Jangan bahas topik lain.
+    4. Buat respons maksimal 2 kalimat pendek dan tajam.
+    5. Gunakan bahasa: '${language}'.
     `;
 
-    const userPrompt = `Saya baru saja mencatat pengeluaran sebesar ${amount} untuk "${description}". Berikan komentarmu.`;
+    // Stringify data transaksi kompleks yang masuk
+    const userPrompt = `Tipe Cashflow: ${txData.type}. Akun: ${txData.account}. Kategori: ${txData.category}. Entitas Penerima/Pemberi: ${txData.entity}. Catatan: ${txData.desc}. Nominal: Rp${txData.amount}. Berikan evaluasi auditmu!`;
 
     try {
         const response = await fetch(AI_BASE_URL, {
@@ -42,22 +40,20 @@ export default async function handler(req, res) {
                     { role: "system", content: systemPrompt },
                     { role: "user", content: userPrompt }
                 ],
-                temperature: 0.7, // Sedikit kreatif tapi tetap terarah pada instruksi
+                temperature: 0.7,
                 max_tokens: 150
             })
         });
 
         const data = await response.json();
         
-        // Menangkap response dari API (Mengikuti format standar seperti OpenAI/MiMo)
         if (data.choices && data.choices.length > 0) {
             res.status(200).json({ suggestion: data.choices[0].message.content });
         } else {
-            res.status(500).json({ suggestion: "Dorobo sedang kebingungan membaca data ini." });
+            res.status(500).json({ suggestion: "Data jurnal tidak terbaca oleh AI." });
         }
         
     } catch (error) {
-        console.error("AI Error:", error);
-        res.status(500).json({ suggestion: "Koneksi ke otak Dorobo terputus." });
+        res.status(500).json({ suggestion: "Koneksi ke server Vercel/AI gagal." });
     }
 }
