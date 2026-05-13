@@ -100,22 +100,15 @@
                                     <option value="Kas Tunai">Kas Tunai</option>
                                 </optgroup>
                                 <optgroup label="Tabungan & Giro" id="grp-bank">
-                                    <option value="T Bank-0001">T Bank-0001</option>
-                                    <option value="T Bank-0002">T Bank-0002</option>
-                                    <option value="T Bank-0003">T Bank-0003</option>
-                                    <option value="T Bank-0004">T Bank-0004</option>
-                                    <option value="T Bank-0005">T Bank-0005</option>
-                                    <option value="T Bank-0006">T Bank-0006</option>
-                                    <option value="T Bank-0007">T Bank-0007</option>
-                                    <option value="T Bank-0008">T Bank-0008</option>
-                                    <option value="G Bank-0009">G Bank-0009</option>
+                                    <option value="Bank BCA">Bank BCA (Utama)</option>
+                                    <option value="Bank Mandiri">Bank Mandiri (Gaji)</option>
+                                    <option value="Bank Jago">Bank Jago (Darurat)</option>
+                                    <option value="GoPay">Saldo GoPay</option>
+                                    <option value="OVO">Saldo OVO</option>
                                 </optgroup>
                                 <optgroup label="Kartu Kredit" id="grp-kk">
-                                    <option value="KK Bank-0001">KK Bank-0001</option>
-                                    <option value="KK Bank-0002">KK Bank-0002</option>
-                                    <option value="KK Bank-0003">KK Bank-0003</option>
-                                    <option value="KK Bank-0004">KK Bank-0004</option>
-                                    <option value="KK Bank-0005">KK Bank-0005</option>
+                                    <option value="KK BCA">Kartu Kredit BCA</option>
+                                    <option value="KK Tokopedia Card">Tokopedia Card</option>
                                 </optgroup>
                             </select>
                         </div>
@@ -163,7 +156,7 @@
                 ai_waiting: "Menganalisis data finansialmu. Dorobo akan memberikan nasihat manajemen keuangan di sini...", rec_title: "Jurnal Transaksi Baru",
                 lbl_type: "Jenis Transaksi", opt_exp: "Pengeluaran (Expense)", opt_inc: "Pemasukan (Income)", opt_tf: "Mutasi (Transfer)",
                 lbl_acc: "Sumber Akun", lbl_cat: "Kategori (COA)", ph_cat: "mis: F&B, Utang, Gaji...",
-                lbl_ent: "Entitas (Penerima/Pengirim)", ph_ent: "mis: Tokopedia, PLN, Rekan...", ph_desc: "Catatan Spesifik", ph_amount: "Jumlah",
+                lbl_ent: "Entitas (Penerima/Pengirim)", ph_ent: "mis: Tokopedia, PLN, Rekan...", ph_desc: "Catatan Spesifik (mis: Pakan 12 kucing)", ph_amount: "Jumlah",
                 btn_save: "Catat ke Buku Besar", chart_title: "Grafik Cashflow", ledger_title: "Buku Jurnal", realtime: "Real-time",
                 alert_fill: "Kategori, Entitas, dan Jumlah wajib diisi!", currency: "Rp", lbl_inc: "Pemasukan", lbl_exp: "Pengeluaran"
             },
@@ -173,7 +166,7 @@
                 ai_waiting: "Analyzing your financial data. Dorobo will provide financial management advice here...", rec_title: "New Transaction Journal",
                 lbl_type: "Transaction Type", opt_exp: "Expense", opt_inc: "Income", opt_tf: "Transfer",
                 lbl_acc: "Account Source", lbl_cat: "Category (COA)", ph_cat: "e.g., F&B, Debt, Salary...",
-                lbl_ent: "Entity (Recipient/Sender)", ph_ent: "e.g., Amazon, Electric, Peer...", ph_desc: "Specific Note", ph_amount: "Amount",
+                lbl_ent: "Entity (Recipient/Sender)", ph_ent: "e.g., Amazon, Electric, Peer...", ph_desc: "Specific Note (e.g., Food for 12 cats)", ph_amount: "Amount",
                 btn_save: "Record to Ledger", chart_title: "Cashflow Chart", ledger_title: "Ledger Book", realtime: "Real-time",
                 alert_fill: "Category, Entity, and Amount are required!", currency: "$", lbl_inc: "Income", lbl_exp: "Expense"
             },
@@ -354,9 +347,9 @@
         // KONFIGURASI AI LANGSUNG DI HTML
         // ==========================================
         // PENTING: Masukkan API Key kamu di bawah ini!
-        const AI_API_KEY = "MASUKKAN_API_KEY_MIMO_KAMU_DISINI"; 
-        const AI_BASE_URL = "https://api.xiaomimimo.com/v1/chat/completions"; 
-        const AI_MODEL = "mimo-v2.5"; 
+        const AI_API_KEY = "tp-s1l6kzgx1yra5e6y0te9i9rfch1a3tuawcjvbw7fezotxt30"; 
+        const AI_BASE_URL = "https://token-plan-sgp.xiaomimimo.com/v1"; 
+        const AI_MODEL = "MiMo-V2.5-Pro"; 
 
         async function generateAISuggestion(tx) {
             const aiDisp = document.getElementById('ai-suggestion');
@@ -367,7 +360,6 @@
                 return;
             }
 
-            // Prompt AI yang Diperbarui untuk Memberikan Nasihat / Advice
             const systemPrompt = `
             Kamu adalah "Dorobo", AI penasihat dan auditor keuangan pribadi yang cerdas, profesional, tegas, dan sedikit sarkas.
             Aturan Evaluasi & Nasihat:
@@ -393,7 +385,7 @@
                             { role: "user", content: userPrompt }
                         ],
                         temperature: 0.7,
-                        max_tokens: 300 // Diperbesar agar AI bisa bicara lebih banyak untuk advice
+                        max_tokens: 300
                     })
                 });
 
