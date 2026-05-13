@@ -46,7 +46,6 @@
                 <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/action/google.svg" class="w-6 h-6 mr-3 bg-white rounded-full p-0.5" alt="Google">
                 <span id="t-login">Masuk dengan Google</span>
             </button>
-            <p id="t-warning" class="mt-6 text-xs text-zinc-500">©2026 INFERNO.</p>
         </div>
     </div>
 
@@ -114,7 +113,6 @@
             id: {
                 subtitle: "Kendalikan keuanganmu. Jangan biarkan uangmu dicuri kebiasaan buruk.",
                 login: "Masuk dengan Google",
-                warning: "Pastikan Firebase Config sudah dikonfigurasi di script.",
                 hello: "Halo,",
                 logout: "Keluar",
                 total: "Total Pengeluaran",
@@ -126,19 +124,11 @@
                 chart: "Grafik Pengeluaran",
                 history: "Riwayat Terbaru",
                 realtime: "Real-time",
-                currency: "Rp",
-                ai_msgs: [
-                    "Dorobo melihat pengeluaran untuk '{desc}'. Apakah ini benar-benar kebutuhan?",
-                    "Grafik pengeluaranmu mulai naik. Waktunya mengerem pengeluaran tidak penting.",
-                    "Sistem mencatat transaksi baru. Pastikan sisa saldomu cukup untuk akhir bulan.",
-                    "Analisis AI: Alokasikan 20% dari budgetmu untuk investasi atau tabungan darurat.",
-                    "Terdeteksi aktivitas finansial. Mengontrol pengeluaran kecil adalah kunci kekayaan besar."
-                ]
+                currency: "Rp"
             },
             en: {
                 subtitle: "Control your finances. Don't let bad habits steal your money.",
                 login: "Sign in with Google",
-                warning: "Ensure Firebase Config is set in the script.",
                 hello: "Hello,",
                 logout: "Logout",
                 total: "Total Expenses",
@@ -150,19 +140,11 @@
                 chart: "Expense Chart",
                 history: "Recent History",
                 realtime: "Real-time",
-                currency: "$",
-                ai_msgs: [
-                    "Dorobo sees spending on '{desc}'. Is this really a need?",
-                    "Your expenses are rising. Time to curb unnecessary spending.",
-                    "New transaction logged. Ensure your balance is enough for the month.",
-                    "AI Analysis: Allocate 20% of your budget to investments or savings.",
-                    "Financial activity detected. Controlling small expenses is the key to wealth."
-                ]
+                currency: "$"
             },
             zh: {
                 subtitle: "控制您的财务。不要让坏习惯偷走您的钱。",
                 login: "使用 Google 登录",
-                warning: "确保脚本中已配置 Firebase Config。",
                 hello: "你好，",
                 logout: "登出",
                 total: "总支出",
@@ -174,19 +156,11 @@
                 chart: "支出图表",
                 history: "最近记录",
                 realtime: "实时",
-                currency: "¥",
-                ai_msgs: [
-                    "Dorobo 看到您在 '{desc}' 上的花费。这真的是必须的吗？",
-                    "您的支出正在增加。是时候遏制不必要的开支了。",
-                    "记录了新交易。请确保您的余额足以维持本月。",
-                    "AI 分析：将预算的 20% 分配给投资或紧急储蓄。",
-                    "检测到财务活动。控制小额开支是积累财富的关键。"
-                ]
+                currency: "¥"
             },
             ja: {
                 subtitle: "財務を管理する。悪い習慣にお金を盗まれないように。",
                 login: "Google でログイン",
-                warning: "スクリプトにFirebase Configが設定されていることを確認してください。",
                 hello: "こんにちは、",
                 logout: "ログアウト",
                 total: "総支出",
@@ -198,19 +172,11 @@
                 chart: "支出チャート",
                 history: "最近の履歴",
                 realtime: "リアルタイム",
-                currency: "¥",
-                ai_msgs: [
-                    "Doroboは '{desc}' への支出を確認しました。これは本当に必要ですか？",
-                    "支出が増加しています。不必要な出費を抑える時期です。",
-                    "新しい取引が記録されました。月末まで十分な残高があるか確認してください。",
-                    "AI分析：予算の20％を投資や緊急用の貯蓄に割り当てましょう。",
-                    "財務活動を検出しました。小さな出費を抑えることが富への鍵です。"
-                ]
+                currency: "¥"
             },
             ru: {
                 subtitle: "Контролируйте свои финансы. Не позволяйте вредным привычкам красть ваши деньги.",
                 login: "Войти через Google",
-                warning: "Убедитесь, что конфигурация Firebase задана в скрипте.",
                 hello: "Здравствуйте,",
                 logout: "Выйти",
                 total: "Общие расходы",
@@ -222,14 +188,7 @@
                 chart: "График расходов",
                 history: "Недавняя история",
                 realtime: "В реальном времени",
-                currency: "₽",
-                ai_msgs: [
-                    "Dorobo видит траты на '{desc}'. Это действительно необходимо?",
-                    "Ваши расходы растут. Пора сократить ненужные траты.",
-                    "Записана новая транзакция. Убедитесь, что баланса хватит на месяц.",
-                    "AI Анализ: Выделите 20% бюджета на инвестиции или сбережения.",
-                    "Обнаружена финансовая активность. Контроль мелких расходов — ключ к богатству."
-                ]
+                currency: "₽"
             }
         };
 
@@ -243,7 +202,6 @@
             // Text Content
             document.getElementById('t-subtitle').innerText = t.subtitle;
             document.getElementById('t-login').innerText = t.login;
-            document.getElementById('t-warning').innerText = t.warning;
             document.getElementById('t-hello').innerText = t.hello;
             document.getElementById('btn-logout').innerText = t.logout;
             document.getElementById('t-total').innerText = t.total;
@@ -266,7 +224,7 @@
             // Document Language
             document.documentElement.lang = currentLang;
             
-            updateUI(); // Refresh list to apply new currency symbol
+            updateUI(); 
         }
 
         langSelector.addEventListener('change', (e) => {
@@ -278,12 +236,12 @@
 
         // --- 1. FIREBASE CONFIGURATION ---
         const firebaseConfig = {
-            apiKey: "YOUR_API_KEY",
-            authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-            projectId: "YOUR_PROJECT_ID",
-            storageBucket: "YOUR_PROJECT_ID.appspot.com",
-            messagingSenderId: "YOUR_MESSAGING_ID",
-            appId: "YOUR_APP_ID"
+            apiKey: "AIzaSyC71WCtUeWM-U2hAMESu-pTDxRScB5ZXJY",
+            authDomain: "dorobo-d0846.firebaseapp.com",
+            projectId: "dorobo-d0846",
+            storageBucket: "dorobo-d0846.firebasestorage.app",
+            messagingSenderId: "7873066551",
+            appId: "1:37873066551:web:5777aa352ada9370cfd5b2"
         };
 
         if (firebaseConfig.apiKey !== "YOUR_API_KEY") {
@@ -357,7 +315,9 @@
             document.getElementById('amount').value = '';
             
             updateUI();
-            generateAISuggestion(desc);
+            
+            // Pass description AND amount to the backend
+            generateAISuggestion(desc, amount);
         }
 
         function updateUI() {
@@ -383,11 +343,47 @@
             updateChart();
         }
 
-        // --- 5. AI LOGIC (Simulated Multi-lang) ---
-        function generateAISuggestion(desc) {
-            const msgs = i18n[currentLang].ai_msgs;
-            let randomMsg = msgs[Math.floor(Math.random() * msgs.length)];
-            aiDisp.innerText = randomMsg.replace('{desc}', desc);
+        // --- 5. AI LOGIC (Backend Integration) ---
+        async function generateAISuggestion(desc, amount) {
+            const loadingTexts = {
+                id: "Dorobo sedang menganalisis dompetmu...",
+                en: "Dorobo is analyzing your wallet...",
+                zh: "Dorobo 正在分析你的钱包...",
+                ja: "Doroboが財布を分析中...",
+                ru: "Dorobo анализирует ваш кошелек..."
+            };
+            
+            aiDisp.innerText = loadingTexts[currentLang] || "Loading...";
+
+            try {
+                const response = await fetch('/api/insight', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        description: desc, 
+                        amount: amount, 
+                        language: currentLang 
+                    })
+                });
+
+                const data = await response.json();
+                
+                if (response.ok) {
+                    aiDisp.innerText = data.suggestion; 
+                } else {
+                    aiDisp.innerText = "Error: " + data.suggestion;
+                }
+            } catch (error) {
+                console.error("Gagal mengambil insight AI:", error);
+                const errTexts = {
+                    id: "Gagal terhubung ke server Dorobo.",
+                    en: "Failed to connect to Dorobo server.",
+                    zh: "无法连接到 Dorobo 服务器。",
+                    ja: "Doroboサーバーへの接続に失敗しました。",
+                    ru: "Не удалось подключиться к серверу Dorobo."
+                };
+                aiDisp.innerText = errTexts[currentLang] || "Error connection.";
+            }
         }
 
         // --- 6. CHART LOGIC ---
